@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#12080e">
 <title>Terra Aventura — Vignoble</title>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<!-- Web3Forms : envoi d'email sans configuration serveur -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════ VARIABLES ═══════════════ */
@@ -194,12 +194,82 @@ main{max-width:480px;margin:0 auto;padding:0 .85rem 6rem;}
 .btn-restart{width:100%;background:linear-gradient(135deg,var(--ruby),var(--wine));border:none;border-radius:14px;padding:.93rem;color:var(--cream);font-family:'Cinzel',serif;font-size:.87rem;letter-spacing:.09em;cursor:pointer;min-height:52px;touch-action:manipulation;box-shadow:0 4px 16px rgba(92,26,46,.5);}
 .btn-restart:active{transform:scale(.97);}
 
+/* ═══════════════ QUIT BUTTON ═══════════════ */
+.btn-quit{
+  position:fixed;bottom:calc(1.2rem + var(--safe-b));right:1.1rem;z-index:100;
+  background:rgba(22,8,14,.92);border:1.5px solid rgba(200,150,42,.35);
+  border-radius:14px;padding:.62rem 1rem;
+  color:var(--blush);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;
+  cursor:pointer;backdrop-filter:blur(12px);
+  box-shadow:0 4px 18px rgba(0,0,0,.5);
+  display:flex;align-items:center;gap:.42rem;
+  touch-action:manipulation;min-height:48px;
+  transition:border-color .2s,color .2s;
+}
+.btn-quit:hover{border-color:rgba(220,80,80,.6);color:#ffaaaa;}
+.btn-quit:active{transform:scale(.96);}
+
+/* ═══════════════ MODAL OVERLAY ═══════════════ */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  padding:1.2rem;opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.modal-overlay.visible{opacity:1;pointer-events:auto;}
+.modal-box{
+  background:#1e0a14;border:1.5px solid rgba(200,150,42,.28);border-radius:22px;
+  padding:1.7rem 1.4rem;max-width:370px;width:100%;
+  box-shadow:0 16px 60px rgba(0,0,0,.7);
+  transform:translateY(18px);transition:transform .22s;
+}
+.modal-overlay.visible .modal-box{transform:translateY(0);}
+.modal-icon{font-size:2.8rem;display:block;text-align:center;margin-bottom:.6rem;}
+.modal-title{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--amber);text-align:center;margin-bottom:.5rem;}
+.modal-sub{font-size:.83rem;color:var(--blush);text-align:center;line-height:1.5;margin-bottom:1.2rem;opacity:.9;}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.btn-modal-cancel{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);border-radius:14px;padding:.85rem;color:var(--cream);font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;min-height:52px;touch-action:manipulation;}
+.btn-modal-cancel:active{transform:scale(.97);}
+.btn-modal-confirm{background:linear-gradient(135deg,#8b2020,#c03030);border:none;border-radius:14px;padding:.85rem;color:#fff;font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;letter-spacing:.06em;cursor:pointer;min-height:52px;touch-action:manipulation;box-shadow:0 4px 16px rgba(180,30,30,.45);}
+.btn-modal-confirm:active{transform:scale(.97);}
+
+/* ═══════════════ EMAIL CONFIG PANEL ═══════════════ */
+.email-config-panel{
+  margin-top:1rem;background:rgba(200,150,42,.06);
+  border:1.5px solid rgba(200,150,42,.25);border-radius:16px;padding:1rem 1.1rem;
+}
+.email-config-title{font-family:'Cinzel',serif;font-size:.82rem;color:var(--amber);letter-spacing:.08em;margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem;}
+.cfg-field{margin-bottom:.65rem;}
+.cfg-label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:.3rem;}
+.cfg-input{width:100%;background:rgba(92,26,46,.35);border:1.5px solid rgba(200,150,42,.25);border-radius:10px;padding:.62rem .8rem;color:var(--cream);font-family:'Nunito',sans-serif;font-size:.82rem;outline:none;-webkit-appearance:none;}
+.cfg-input:focus{border-color:var(--amber);}
+.cfg-input::placeholder{color:rgba(248,240,224,.28);}
+.btn-cfg-save{width:100%;margin-top:.2rem;background:linear-gradient(135deg,var(--vine),var(--leaf));border:none;border-radius:11px;padding:.72rem;color:#e8ffd0;font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;letter-spacing:.07em;cursor:pointer;min-height:46px;touch-action:manipulation;}
+.btn-cfg-save:active{transform:scale(.97);}
+.cfg-saved-badge{display:none;background:rgba(60,130,60,.18);border:1px solid rgba(109,202,109,.3);border-radius:10px;padding:.5rem .8rem;font-size:.78rem;color:#c8ffc8;text-align:center;margin-top:.5rem;}
+.cfg-toggle{background:none;border:none;color:var(--blush);font-size:.73rem;font-family:'Nunito',sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:3px;margin-bottom:.6rem;padding:0;opacity:.85;}
 
 </style>
 </head>
 <body>
 
 <div class="particles"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+<!-- ══════ QUIT BUTTON ══════ -->
+<button class="btn-quit" id="btn-quit" onclick="askQuit()" style="display:none;">⛔ Terminer le parcours</button>
+
+<!-- ══════ QUIT MODAL ══════ -->
+<div class="modal-overlay" id="quit-modal">
+  <div class="modal-box">
+    <span class="modal-icon">⚠️</span>
+    <div class="modal-title">Terminer le parcours ?</div>
+    <p class="modal-sub">Êtes-vous sûr de vouloir quitter ?<br>Vos résultats partiels seront enregistrés et envoyés à l'organisateur.</p>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="closeQuitModal()">↩ Continuer</button>
+      <button class="btn-modal-confirm" onclick="confirmQuit()">✔ Oui, terminer</button>
+    </div>
+  </div>
+</div>
 
 <header>
   <div class="logo-ring">🍷</div>
@@ -214,7 +284,7 @@ main{max-width:480px;margin:0 auto;padding:0 .85rem 6rem;}
 <div class="score-bar">
   <div class="badge"><span class="badge-val" id="score-val">0</span><span class="badge-lbl">Points</span></div>
   <div class="badge"><span class="badge-val" id="correct-val">0</span><span class="badge-lbl">Bonnes</span></div>
-  <div class="badge"><span class="badge-val" id="loc-val">0/10</span><span class="badge-lbl">Étapes</span></div>
+  <div class="badge"><span class="badge-val" id="loc-val">0/8</span><span class="badge-lbl">Étapes</span></div>
 </div>
 
 <main>
@@ -294,6 +364,21 @@ main{max-width:480px;margin:0 auto;padding:0 .85rem 6rem;}
   </div>
   <div id="send-status-box"></div>
   <button class="btn-share" id="btn-share" onclick="shareResults()">↗ Partager les résultats</button>
+
+  <!-- Email config panel -->
+  <div id="email-cfg-wrap">
+    <button class="cfg-toggle" onclick="toggleEmailCfg()">⚙️ Renvoyer à un autre e-mail</button>
+    <div class="email-config-panel" id="email-cfg-panel" style="display:none;">
+      <div class="email-config-title">📧 Envoyer les résultats</div>
+      <div class="cfg-field">
+        <label class="cfg-label" for="cfg-email">Email destinataire</label>
+        <input class="cfg-input" id="cfg-email" type="email" placeholder="organisateur@email.com" autocomplete="off" spellcheck="false">
+      </div>
+      <button class="btn-cfg-save" onclick="saveCfgAndSend()">📨 Envoyer les résultats</button>
+      <div class="cfg-saved-badge" id="cfg-saved-badge">✅ Envoyé !</div>
+    </div>
+  </div>
+
   <button class="btn-restart" onclick="restart()">↺ Nouveau joueur</button>
 </div>
 
@@ -302,18 +387,12 @@ main{max-width:480px;margin:0 auto;padding:0 .85rem 6rem;}
 <!-- ═══════════════════════════════════════════════════════ -->
 <script>
 /* ╔══════════════════════════════════════════╗
-   ║  CONFIGURATION EMAILJS                   ║
-   ║  1. Créer un compte sur emailjs.com      ║
-   ║  2. Ajouter un service Gmail             ║
-   ║  3. Créer un template avec ces variables:║
-   ║     {{to_email}} {{player_name}}         ║
-   ║     {{score}} {{details}}                ║
-   ║  4. Remplacer les 3 valeurs ci-dessous   ║
+   ║  CONFIGURATION — Web3Forms               ║
+   ║  Service gratuit, aucune config requise  ║
+   ║  https://web3forms.com                   ║
    ╚══════════════════════════════════════════╝ */
-const EMAILJS_PUBLIC_KEY  = 'VOTRE_PUBLIC_KEY';   // ← remplacer
-const EMAILJS_SERVICE_ID  = 'VOTRE_SERVICE_ID';   // ← remplacer
-const EMAILJS_TEMPLATE_ID = 'VOTRE_TEMPLATE_ID';  // ← remplacer
-const ORGANIZER_EMAIL     = 'terra.aventura17@gmail.com';
+const WEB3FORMS_KEY   = '5fcb62d0-e4fc-4e6b-92b8-c2dcdf17c3a7';
+const ORGANIZER_EMAIL = 'terra.aventura17@gmail.com';
 
 // ═══════════════════════════════════════════
 //  CODES À 6 CHIFFRES — 1 code par étape
@@ -327,8 +406,8 @@ const CODES = {
   '628493': 'loc6',
   '735162': 'loc7',
   '896241': 'loc8',
-  '953718': 'loc9',
-  '107842': 'loc10'
+  '953718': 'loc9_disabled',
+  '107842': 'loc10_disabled'
 };
 
 // ═══════════════════════════════════════════
@@ -425,32 +504,10 @@ const LOCATIONS = {
      ok:"✅ Parfait ! Le serpentin refroidisseur, les trois fractions (têtes, cœur, queues) et le cœur sélectionné pour le Cognac sont tous exacts. L'alambic charentais fonctionne au gaz ou au bois, pas à l'électricité.",
      ko:"❌ Les bonnes réponses : le serpentin refroidit les vapeurs, les fractions sont têtes/cœur/queues, et c'est le cœur qui est sélectionné pour le Cognac. L'alambic ne fonctionne pas à l'électricité."}
   ]},
-
-  loc9:{name:"Vins & Climat",icon:"🌡️",tag:"Étape 9 · Environnement",questions:[
-    {text:"Quelle conséquence du changement climatique observe-t-on déjà dans les vignobles français ?",
-     choices:["Les vendanges ont lieu de plus en plus tôt","Les raisins contiennent moins de sucre","Les vignobles disparaissent du sud","Le Pinot Noir remplace tous les cépages"],correct:[0],multi:false,
-     ok:"✅ Exact ! Depuis les années 1980, les vendanges ont avancé de 2 à 3 semaines en France à cause des températures plus élevées.",
-     ko:"❌ Le réchauffement climatique provoque des vendanges de plus en plus précoces : les raisins mûrissent plus vite."},
-    {text:"Quelles adaptations les vignerons utilisent-ils face au changement climatique ? (plusieurs réponses)",
-     choices:["Planter des cépages plus résistants à la chaleur","Renoncer à la viticulture","Travailler l'ombre et l'enherbement pour fraîcheur","Avancer l'heure des vendanges à la nuit fraîche"],correct:[0,2,3],multi:true,
-     ok:"✅ Parfait ! Nouveaux cépages, enherbement, vendanges nocturnes : les vignerons s'adaptent avec ingéniosité.",
-     ko:"❌ Les vignerons s'adaptent en changeant de cépages, en travaillant l'enherbement et en vendangeant la nuit pour plus de fraîcheur."}
-  ]},
-
-  loc10:{name:"Histoire du Vin",icon:"🏺",tag:"Étape 10 · Histoire",questions:[
-    {text:"Quel peuple a introduit la viticulture à Massalia (Marseille) vers le VIe siècle avant J.-C. ?",
-     choices:["Les Gaulois","Les Romains","Les Grecs","Les Arabes"],correct:[2],multi:false,
-     ok:"✅ Bravo ! Les Grecs, fondateurs de Massalia, ont introduit la vigne en Gaule vers 600 av. J.-C. Les Romains l'ont ensuite propagée partout.",
-     ko:"❌ Ce sont les Grecs qui ont apporté la vigne à Massalia (Marseille). Les Romains ont ensuite étendu la viticulture à tout le territoire gaulois."},
-    {text:"Quels ordres religieux ont joué un rôle majeur dans le développement de la viticulture au Moyen-Âge ? (plusieurs réponses)",
-     choices:["Les Cisterciens","Les Jésuites","Les Bénédictins","Les Franciscains"],correct:[0,2],multi:true,
-     ok:"✅ Exact ! Les Cisterciens (Clos Vougeot en Bourgogne) et les Bénédictins ont été des pionniers de la viticulture médiévale.",
-     ko:"❌ Les moines Cisterciens et Bénédictins ont développé de nombreux grands vignobles, notamment en Bourgogne, au Moyen-Âge."}
-  ]}
 };
 
-const ORDER = ['loc1','loc2','loc3','loc4','loc5','loc6','loc7','loc8','loc9','loc10'];
-const NUM_QUESTIONS = ORDER.length * 2; // 20 questions au total
+const ORDER = ['loc1','loc2','loc3','loc4','loc5','loc6','loc7','loc8'];
+const NUM_QUESTIONS = ORDER.length * 2; // 16 questions au total
 // Score max = somme de toutes les bonnes réponses possibles (scoring partiel multi)
 const MAX_SCORE = ORDER.reduce((s, id) =>
   s + LOCATIONS[id].questions.reduce((qs, q) => qs + q.correct.length, 0), 0);
@@ -472,7 +529,7 @@ let state = {
 // ═══════════════════════════════════════════
 //  EMAILJS INIT
 // ═══════════════════════════════════════════
-try { emailjs.init(EMAILJS_PUBLIC_KEY); } catch(e){}
+// Web3Forms — aucune initialisation requise
 
 // ═══════════════════════════════════════════
 //  WELCOME
@@ -489,6 +546,7 @@ function startGame() {
   document.getElementById('chip-name').textContent = name;
   document.getElementById('code-step-title').textContent = `Étape 1 / ${ORDER.length}`;
   show('scanner-view'); hide('welcome-view');
+  document.getElementById('btn-quit').style.display = 'flex';
   scrollTop();
 }
 
@@ -695,11 +753,14 @@ function validateAnswer() {
 
   // Feedback text
   const fb = document.getElementById('feedback');
-  fb.className = 'feedback ' + (isOk ? 'ok' : (pts > 0 ? 'ok' : 'ko'));
+  const isPartial = pts > 0 && !isOk;
+  fb.className = 'feedback ' + (isOk ? 'ok' : (isPartial ? 'ok' : 'ko'));
   const ptsLabel = isMulti
     ? `+ ${pts} / ${cor.length} point${pts > 1 ? 's' : ''} 🌟`
     : (pts === 1 ? '+ 1 point 🌟' : '+ 0 point');
-  fb.innerHTML = `${isOk ? q.ok : q.ko}<div class="points-awarded">${ptsLabel}</div>`;
+  // Pour multi : montrer le message ok si partiel aussi (encourageant)
+  const msgText = isOk ? q.ok : (isPartial ? `⚡ Partiellement correct ! ${pts}/${cor.length} bonne(s) réponse(s).\n${q.ko}` : q.ko);
+  fb.innerHTML = `${msgText}<div class="points-awarded">${ptsLabel}</div>`;
 
   updateUI();
 
@@ -766,27 +827,41 @@ function showFinish() {
 }
 
 // ═══════════════════════════════════════════
-//  AUTO SEND EMAIL
+//  AUTO SEND EMAIL — Web3Forms
 // ═══════════════════════════════════════════
-function sendEmail() {
+async function sendEmail() {
   const box = document.getElementById('send-status-box');
   box.innerHTML = `<div class="send-status sending"><span class="spin">⏳</span> Envoi des résultats à l'organisateur…</div>`;
-
   const details = buildResultText();
+  const date = new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
 
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-    to_email:    ORGANIZER_EMAIL,
-    player_name: state.playerName,
-    score:       `${state.score} / ${MAX_SCORE} points`,
-    correct:     `${state.correctCount} questions entièrement correctes sur ${NUM_QUESTIONS}`,
-    details:     details,
-    date:        new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' })
-  }).then(() => {
-    box.innerHTML = `<div class="send-status sent">✅ Résultats envoyés à l'organisateur avec succès !</div>`;
-  }).catch(() => {
-    // Fallback: mailto
-    box.innerHTML = `<div class="send-status fail">⚠️ Envoi automatique indisponible. <a href="${buildMailto()}" style="color:var(--amber);font-weight:700;text-decoration:none;">Appuyez ici pour envoyer manuellement →</a></div>`;
-  });
+  try {
+    const resp = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        access_key:   WEB3FORMS_KEY,
+        subject:      `Terra Aventura — Résultats de ${state.playerName} (${state.score}/${MAX_SCORE} pts)`,
+        from_name:    'Terra Aventura Vignoble',
+        to:           ORGANIZER_EMAIL,
+        player_name:  state.playerName,
+        score:        `${state.score} / ${MAX_SCORE} points`,
+        correct:      `${state.correctCount} questions entièrement correctes sur ${NUM_QUESTIONS}`,
+        date:         date,
+        message:      details
+      })
+    });
+    const data = await resp.json();
+    if (data.success) {
+      box.innerHTML = `<div class="send-status sent">✅ Résultats envoyés à ${ORGANIZER_EMAIL} avec succès !</div>`;
+      document.getElementById('email-cfg-wrap').style.display = 'none';
+    } else {
+      throw new Error(data.message || 'Échec');
+    }
+  } catch(err) {
+    box.innerHTML = `<div class="send-status fail">⚠️ Envoi échoué. <a href="${buildMailto()}" style="color:var(--amber);font-weight:700;text-decoration:none;">Envoyer manuellement →</a></div>`;
+    console.error('Web3Forms error:', err);
+  }
 }
 
 function buildResultText() {
@@ -821,6 +896,71 @@ async function shareResults() {
 }
 
 // ═══════════════════════════════════════════
+//  QUIT MODAL
+// ═══════════════════════════════════════════
+function askQuit() {
+  document.getElementById('quit-modal').classList.add('visible');
+}
+function closeQuitModal() {
+  document.getElementById('quit-modal').classList.remove('visible');
+}
+function confirmQuit() {
+  document.getElementById('quit-modal').classList.remove('visible');
+  showFinish();
+}
+
+// ═══════════════════════════════════════════
+//  EMAIL CONFIG PANEL
+// ═══════════════════════════════════════════
+function toggleEmailCfg() {
+  const panel = document.getElementById('email-cfg-panel');
+  const isHidden = panel.style.display === 'none';
+  panel.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    // Pré-remplir l'email destinataire
+    document.getElementById('cfg-email').value = ORGANIZER_EMAIL;
+  }
+}
+
+async function saveCfgAndSend() {
+  const em = document.getElementById('cfg-email').value.trim();
+  if (!em) { alert('Veuillez entrer un e-mail destinataire.'); return; }
+  const box = document.getElementById('send-status-box');
+  box.innerHTML = `<div class="send-status sending"><span class="spin">⏳</span> Envoi en cours…</div>`;
+  const details = buildResultText();
+  const date = new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+  try {
+    const resp = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        access_key:  WEB3FORMS_KEY,
+        subject:     `Terra Aventura — Résultats de ${state.playerName}`,
+        from_name:   'Terra Aventura Vignoble',
+        to:          em,
+        player_name: state.playerName,
+        score:       `${state.score} / ${MAX_SCORE} points`,
+        date:        date,
+        message:     details
+      })
+    });
+    const data = await resp.json();
+    if (data.success) {
+      box.innerHTML = `<div class="send-status sent">✅ Résultats envoyés à ${em} !</div>`;
+      document.getElementById('email-cfg-panel').style.display = 'none';
+    } else { throw new Error(); }
+  } catch(e) {
+    box.innerHTML = `<div class="send-status fail">⚠️ Échec. <a href="${buildMailtoWith(em)}" style="color:var(--amber);font-weight:700;text-decoration:none;">Envoyer manuellement →</a></div>`;
+  }
+}
+
+function buildMailtoWith(email) {
+  const subj = encodeURIComponent(`Terra Aventura — Résultats de ${state.playerName}`);
+  const body = encodeURIComponent(buildResultText());
+  return `mailto:${email}?subject=${subj}&body=${body}`;
+}
+
+// ═══════════════════════════════════════════
 //  RESTART
 // ═══════════════════════════════════════════
 function restart() {
@@ -829,6 +969,8 @@ function restart() {
   document.getElementById('player-name').value = '';
   document.getElementById('send-status-box').innerHTML = '';
   document.getElementById('btn-share').style.display = 'none';
+  document.getElementById('btn-quit').style.display = 'none';
+  document.getElementById('email-cfg-panel').style.display = 'none';
   hide('finish-view'); hide('location-view'); hide('scanner-view');
   show('welcome-view');
   scrollTop();
